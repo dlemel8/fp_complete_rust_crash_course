@@ -1,3 +1,5 @@
+use std::fmt::{Display, Formatter};
+
 enum VerticalDirection {
     Up,
     Down,
@@ -75,9 +77,16 @@ impl Game {
 
     fn step(&mut self) {
         self.ball.bounce(&self.frame);
+        self.ball.move_()
+    }
+}
+
+impl Display for Game {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        unimplemented!()
     }
 }
 
 fn main() {
-    println!("Hello, world!");
+    println!("{}", Game::new());
 }
