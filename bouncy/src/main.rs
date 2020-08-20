@@ -82,8 +82,29 @@ impl Game {
 }
 
 impl Display for Game {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        unimplemented!()
+    fn fmt(&self, fmt: &mut Formatter<'_>) -> std::fmt::Result {
+        let horizontal_border = |fmt: &mut Formatter| {
+            write!(fmt, "+")?;
+            for _ in 0..self.frame.width {
+                write!(fmt, "-")?;
+            }
+            write!(fmt, "+\n")
+        };
+
+        let ball_position = (self.ball.horizontal_position, self.ball.vertical_position);
+        horizontal_border(fmt)?;
+        for row in 0..self.frame.height {
+            write!(fmt, "|")?;
+            for col in 0..self.frame.width {
+                let c = match (row, col) {
+                    (row, col) if row == ball_position.1 && col == ball_position.0 => "o",
+                    (_, _) => " ",
+                };
+                write!(fmt, "{}", c)?;
+            }
+            write!(fmt, "|\n")?;
+        }
+        horizontal_border(fmt)
     }
 }
 
