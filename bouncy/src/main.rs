@@ -19,6 +19,8 @@ struct Ball {
 
 impl Ball {
     fn bounce(&mut self, frame: &Frame) {
+        // println!("{}, {}", self.vertical_position, self.horizontal_position);
+
         if self.horizontal_position == 0 {
             self.horizontal_direction = HorizontalDirection::Right
         }
@@ -28,23 +30,23 @@ impl Ball {
         }
 
         if self.vertical_position == 0 {
-            self.vertical_direction = VerticalDirection::Up
+            self.vertical_direction = VerticalDirection::Down
         }
 
         if self.vertical_position == frame.height - 1 {
-            self.vertical_direction = VerticalDirection::Down
+            self.vertical_direction = VerticalDirection::Up
         }
     }
 
     fn move_(&mut self) {
         match self.vertical_direction {
-            VerticalDirection::Down => self.vertical_position -= 1,
-            VerticalDirection::Up => self.vertical_position += 1,
+            VerticalDirection::Down => self.vertical_position += 1,
+            VerticalDirection::Up => self.vertical_position -= 1,
         }
 
         match self.horizontal_direction {
-            HorizontalDirection::Left => self.vertical_position -= 1,
-            HorizontalDirection::Right => self.vertical_position += 1,
+            HorizontalDirection::Left => self.horizontal_position -= 1,
+            HorizontalDirection::Right => self.horizontal_position += 1,
         }
     }
 }
@@ -63,8 +65,8 @@ impl Game {
     fn new() -> Game {
         Game {
             frame: Frame {
-                width: 60,
-                height: 30,
+                width: 80,
+                height: 20,
             },
             ball: Ball {
                 vertical_position: 2,
@@ -109,5 +111,11 @@ impl Display for Game {
 }
 
 fn main() {
-    println!("{}", Game::new());
+    let mut game = Game::new();
+    let sleep_duration = std::time::Duration::from_millis(33);
+    loop {
+        println!("{}", game);
+        game.step();
+        std::thread::sleep(sleep_duration);
+    }
 }
