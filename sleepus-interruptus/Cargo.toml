@@ -8,3 +8,4 @@ edition = "2018"
 
 [dependencies]
 async-std = { vesrion = "1.5.0", features = ["attributes"] }
+pin-project-lite = "0.1.4"
