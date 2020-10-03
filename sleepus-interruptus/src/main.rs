@@ -2,7 +2,8 @@ use std::future::Future;
 use std::pin::Pin;
 use std::time::Duration;
 
-use async_std::task::{Context, Poll, sleep, spawn};
+use async_std::prelude::FutureExt;
+use async_std::task::{block_on, Context, Poll, sleep, spawn};
 use pin_project_lite::pin_project;
 
 struct SleepPrint<Fut> {
@@ -55,25 +56,25 @@ impl<Fut1: Future, Fut2: Future> Future for TwoFutures<Fut1, Fut2> {
     }
 }
 
-// async fn sleepus() {
-fn sleepus() -> impl Future<Output=()> {
-    // for i in 1..=10 {
-    //     println!("sleepus {}", i);
-    //     sleep(Duration::from_millis(500)).await;
-    // }
+// fn sleepus() -> impl Future<Output=()> {
+async fn sleepus() {
+    for i in 1..=10 {
+        println!("sleepus {}", i);
+        sleep(Duration::from_millis(500)).await;
+    }
 
     // SleepPrint {
     //     sleep: sleep(Duration::from_secs(3))
     // }
 
-    TwoFutures {
-        first_done: false,
-        first: sleep(Duration::from_secs(3)),
-        second: {
-            println!("Hello TwoFutures");
-            async_std::future::ready(())
-        },
-    }
+    // TwoFutures {
+    //     first_done: false,
+    //     first: sleep(Duration::from_secs(3)),
+    //     second: {
+    //         println!("Hello TwoFutures");
+    //         async_std::future::ready(())
+    //     },
+    // }
 }
 
 async fn interruptus() {
@@ -83,10 +84,16 @@ async fn interruptus() {
     }
 }
 
-#[async_std::main]
-async fn main() {
-    let s = spawn(sleepus());
-    interruptus().await;
-
-    s.await;
+// #[async_std::main]
+// async fn main() {
+fn main() {
+    // block_on(
+    //     async {
+    //         let s = spawn(sleepus());
+    //         let i = spawn(interruptus());
+    //         s.await;
+    //         i.await;
+    //     }
+    // )
+    block_on(sleepus().join(interruptus()));
 }
